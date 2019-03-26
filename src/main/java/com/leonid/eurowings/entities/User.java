@@ -4,8 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
+/**
+ * This is just a representation of the db table *
+ */
+
 @Entity
 public class User {
+
     @Id
     private Long userid;
     private String username;
