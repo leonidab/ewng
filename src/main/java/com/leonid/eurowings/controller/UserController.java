@@ -36,7 +36,7 @@ public class UserController {
     }
 
     // save a new user
-    @PostMapping("/saveuser")
+    @PutMapping("/saveuser")
     public ResponseEntity<String> saveUser(@RequestBody User user) {
         userDAO.save(user);
         return new ResponseEntity<>("User with ID: " + user.getUserid() + " and username " + user.getUsername() + " saved!", HttpStatus.OK);
