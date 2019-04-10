@@ -30,27 +30,40 @@ public class UserController {
     }
 
     // return a single user
-    @GetMapping("singleuser/{userId}")
+    @GetMapping("user/{userId}")
     public List<User> getOneUser(@PathVariable Long userId) {
         return userDAO.getUserByUserid(userId);
     }
 
     // save a new user
-    @PutMapping("/saveuser")
+    @PutMapping("/new")
     public ResponseEntity<String> saveUser(@RequestBody User user) {
         userDAO.save(user);
         return new ResponseEntity<>("User with ID: " + user.getUserid() + " and username " + user.getUsername() + " saved!", HttpStatus.OK);
     }
 
     // delete user from db
-    @DeleteMapping("/deleteuser/{userId}")
+    @DeleteMapping("/user/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         userDAO.deleteUserByUserid(userId);
         return new ResponseEntity<>("User with ID: " + userId + " deleted!", HttpStatus.OK);
     }
 
+    // delete user from db
+    @PutMapping("/user/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable Long userId) {
+        User user = userDAO.getUserByUserid(userId).get(0);
+        if (user.isStatus() == true) {
+            user.setStatus(false);
+            userDAO.save(user);
+            return new ResponseEntity<>("User with ID: " + userId + " unsubbed!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User with ID: " + userId + "is already subscribed!", HttpStatus.PRECONDITION_FAILED);
+        }
+    }
+
     // get only users that subscribed after a certain date
-    @GetMapping("/getfromdate/{date}")
+    @GetMapping("/fromdate/{date}")
     public List<User> getUsersFromDate(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         List<User> list = userDAO.findAll();
@@ -58,7 +71,7 @@ public class UserController {
     }
 
     // get only users that subscribed before a certain date
-    @GetMapping("/getbeforedate/{date}")
+    @GetMapping("/beforedate/{date}")
     public List<User> getUsersBeforeDate(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         List<User> list = userDAO.findAll();
